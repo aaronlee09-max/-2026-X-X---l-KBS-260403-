@@ -6,166 +6,195 @@
 <title>YouTube Playlist App</title>
 
 <style>
-body {
-    margin: 0;
-    background: black;
-    color: white;
-    font-family: Arial;
+*{
+    box-sizing:border-box;
 }
 
-/* 플레이어 */
-#player {
-    width: 100%;
-    height: 60vh;
-    border: none;
+body{
+    margin:0;
+    background:#000;
+    color:#fff;
+    font-family:Arial,sans-serif;
 }
 
-/* 썸네일 그리드 */
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 10px;
-    padding: 10px;
+#player{
+    width:100%;
+    height:60vh;
+    border:none;
+    display:block;
 }
 
-.card {
-    background: #111;
-    border-radius: 10px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: 0.2s;
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+    gap:12px;
+    padding:12px;
 }
 
-.card:hover {
-    transform: scale(1.05);
+.card{
+    background:#111;
+    border-radius:12px;
+    overflow:hidden;
+    cursor:pointer;
+    transition:.2s;
 }
 
-.card img {
-    width: 100%;
+.card:hover{
+    transform:scale(1.03);
 }
 
-.title {
-    font-size: 12px;
-    padding: 8px;
-    color: #ddd;
+.card img{
+    width:100%;
+    display:block;
+}
+
+.title{
+    padding:8px;
+    font-size:13px;
+    line-height:1.4;
+    color:#ddd;
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🎥 플레이어 -->
-<iframe id="player"
-src="https://youtube.com"
-allow="autoplay; encrypted-media"
-allowfullscreen>
+<!-- 플레이어 -->
+<iframe
+    id="player"
+    src="https://www.youtube.com/embed/lgaXjICBcsc?autoplay=1&mute=1&controls=1"
+    allow="autoplay; encrypted-media"
+    allowfullscreen>
 </iframe>
 
-<!-- 🎬 썸네일 -->
-<div class="grid" id="grid"></div>
+<!-- 썸네일 영역 -->
+<div id="grid" class="grid"></div>
 
 <script>
 
+// 🔑 API KEY
 const API_KEY = "AIzaSyDlZ1MbNErffWAZFClz90ORgSoWtIBu5vs";
 
-/* 🎞 대량 확장된 KBS K-pop 더 시즌즈 아티스트 영상 ID 데이터 세트 */
+// 🎬 영상 목록
 const videos = [
-    // [기존 세트] 1 ~ 40
-    "lgaXjICBcsc","0AcuMH7KewM","003V9eO5knI","i2IK99Kli4E","h9vxTcUPz98",
-    "MOtYJB8P0x0","moaAhsbh5Ds","ehrbOi8b4c4","iwFriq4fPQU","9PjnL0mRYm0",
-    "T6ZYfaQqLyg","57D_tv9pj74","7V8JI93Lov4","tU3nx-f97WM","zKd2p9Y6yEY",
-    "CCa4SuJCxA4","An0Tgf74XOY","qT8dDKNtPjo","V9HV8EoSyR4","nrn07ACbpkE",
-    "So9BeU_Vy20","OLMK2AfMPjo","ZH-VB-jSVaU","6ef-aCP5zMY","YJJ_8w2zKbQ",
-    "qtRCPzBpsA0","vbjLJnlB2kg","UbQFWXsoAM8","e6ngDwYb6Zo","gpDV5qUXNYc",
-    "8asxySoKbTk","vsm7CWw5MYc","6FODI_m9p58","QuRpGlHt-ZM","ggl-ltvY82I",
-    "u7R_RStFBrE","t4ob7HmfMgk","iXpvJPfZt40","Y6q-s-YYkDw","TQIj64NDNGc",
-    
-    // [추가 세트 1] 41 ~ 90
-    "Mo3osLplf-w","0eZCsWvK3Gg","SmG5hQMe94s","KuS_bUCqwv0","oyC9bDUM4C8",
-    "ngXO2Hg7tug","k_kk-dvM9X0","XbqMZjQjmbI","mhafOOZDk_M","pd54ZNNMqm8",
-    "tOUJ1Q7AbjA","lFc50eO55bo","8glFvYTDgBM","rl2Jc6_xqEU","Z0Qtq0x0AmA",
-    "V0W5MZPelSI","9K43w_w-u7U","f7vW5z9bKmc","E2v8gG8gX6E","Hn7wI7HkWww",
-    "wZgR3mO6x2A","V_8g2gR7ykk","L_8vG5gK9ww","p7vW8z9bKmc","Q2v8gG8gX6E",
-    "A3v8gG8gX6E","B3v8gG8gX6E","C3v8gG8gX6E","D3v8gG8gX6E","F3v8gG8gX6E",
-    "G3v8gG8gX6E","H3v8gG8gX6E","I3v8gG8gX6E","J3v8gG8gX6E","K3v8gG8gX6E",
-    "L3v8gG8gX6E","M3v8gG8gX6E","N3v8gG8gX6E","O3v8gG8gX6E","P3v8gG8gX6E",
-    "AfFZipwaWBE","VtXRJed_72I","2lsngoTtUXw","HdX94GCLml0","yreKqxua6Ys",
-    "5QFxVn9_G9k","p0txsfsGFcY","wdrvpeaZM4U","KSauGEVtU78","CPsGg4Q02e8",
 
-    // [추가 세트 2] 91 ~ 140
-    "Q3v8gG8gX6E","R3v8gG8gX6E","S3v8gG8gX6E","T3v8gG8gX6E","U3v8gG8gX6E",
-    "V3v8gG8gX6E","W3v8gG8gX6E","X3v8gG8gX6E","Y3v8gG8gX6E","Z3v8gG8gX6E",
-    "a3v8gG8gX6E","b3v8gG8gX6E","c3v8gG8gX6E","d3v8gG8gX6E","e3v8gG8gX6E",
-    "f3v8gG8gX6E","g3v8gG8gX6E","h3v8gG8gX6E","i3v8gG8gX6E","j3v8gG8gX6E",
-    "k3v8gG8gX6E","l3v8gG8gX6E","m3v8gG8gX6E","n3v8gG8gX6E","o3v8gG8gX6E",
-    "p3v8gG8gX6E","q3v8gG8gX6E","r3v8gG8gX6E","s3v8gG8gX6E","t3v8gG8gX6E",
-    "u3v8gG8gX6E","v3v8gG8gX6E","w3v8gG8gX6E","x3v8gG8gX6E","y3v8gG8gX6E",
-    "z3v8gG8gX6E","13v8gG8gX6E","23v8gG8gX6E","33v8gG8gX6E","43v8gG8gX6E",
-    "53v8gG8gX6E","63v8gG8gX6E","73v8gG8gX6E","83v8gG8gX6E","93v8gG8gX6E",
-    "aa8gG8gX6Eb","bb8gG8gX6Eb","cc8gG8gX6Eb","dd8gG8gX6Eb","ee8gG8gX6Eb",
+"lgaXjICBcsc",
+"0AcuMH7KewM",
+"003V9eO5knI",
+"i2IK99Kli4E",
+"h9vxTcUPz98",
+"MOtYJB8P0x0",
+"moaAhsbh5Ds",
+"ehrbOi8b4c4",
+"iwFriq4fPQU",
+"9PjnL0mRYm0",
+"T6ZYfaQqLyg",
+"57D_tv9pj74",
+"7V8JI93Lov4",
+"tU3nx-f97WM",
+"zKd2p9Y6yEY",
+"CCa4SuJCxA4",
+"An0Tgf74XOY",
+"qT8dDKNtPjo",
+"V9HV8EoSyR4",
+"nrn07ACbpkE",
+"So9BeU_Vy20",
+"OLMK2AfMPjo",
+"ZH-VB-jSVaU",
+"6ef-aCP5zMY",
+"YJJ_8w2zKbQ",
+"qtRCPzBpsA0",
+"vbjLJnlB2kg",
+"UbQFWXsoAM8",
+"e6ngDwYb6Zo",
+"gpDV5qUXNYc",
+"8asxySoKbTk",
+"vsm7CWw5MYc",
+"6FODI_m9p58"
 
-    // [추가 세트 3] 141 ~ 190
-    "ff8gG8gX6Eb","gg8gG8gX6Eb","hh8gG8gX6Eb","ii8gG8gX6Eb","jj8gG8gX6Eb",
-    "kk8gG8gX6Eb","ll8gG8gX6Eb","mm8gG8gX6Eb","nn8gG8gX6Eb","oo8gG8gX6Eb",
-    "pp8gG8gX6Eb","qq8gG8gX6Eb","rr8gG8gX6Eb","ss8gG8gX6Eb","tt8gG8gX6Eb",
-    "uu8gG8gX6Eb","vv8gG8gX6Eb","ww8gG8gX6Eb","xx8gG8gX6Eb","yy8gG8gX6Eb",
-    "zz8gG8gX6Eb","118gG8gX6Eb","228gG8gX6Eb","338gG8gX6Eb","448gG8gX6Eb",
-    "558gG8gX6Eb","668gG8gX6Eb","778gG8gX6Eb","888gG8gX6Eb","998gG8gX6Eb",
-    "ab8gG8gX6Eb","bc8gG8gX6Eb","cd8gG8gX6Eb","de8gG8gX6Eb","ef8gG8gX6Eb",
-    "fg8gG8gX6Eb","gh8gG8gX6Eb","hi8gG8gX6Eb","ij8gG8gX6Eb","jk8gG8gX6Eb",
-    "kl8gG8gX6Eb","lm8gG8gX6Eb","mn8gG8gX6Eb","no8gG8gX6Eb","op8gG8gX6Eb",
-    "pq8gG8gX6Eb","qr8gG8gX6Eb","rs8gG8gX6Eb","st8gG8gX6Eb","tu8gG8gX6Eb"
 ];
 
 const grid = document.getElementById("grid");
 
-/* 🎯 제목 자동 가져오기 (50개 단위 청크 네트워크 호출 처리) */
-async function fetchTitles() {
-    const titleMap = {};
-    const chunkSize = 50;
-    
-    for (let i = 0; i < videos.length; i += chunkSize) {
-        const chunk = videos.slice(i, i + chunkSize);
-        try {
-            const res = await fetch(
-                `https://googleapis.com{chunk.join(",")}&key=${API_KEY}`
+// ▶ 영상 재생
+function play(id){
+
+    document.getElementById("player").src =
+    `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=1`;
+
+}
+
+// 🎨 카드 출력
+function render(titleMap){
+
+    grid.innerHTML="";
+
+    videos.forEach(id=>{
+
+        const card=document.createElement("div");
+        card.className="card";
+
+        card.innerHTML=`
+            <img
+                src="https://img.youtube.com/vi/${id}/mqdefault.jpg"
+                loading="lazy"
+            >
+
+            <div class="title">
+                ${titleMap[id] || "제목 불러오는 중..."}
+            </div>
+        `;
+
+        card.onclick=()=>play(id);
+
+        grid.appendChild(card);
+
+    });
+
+}
+
+// 📡 제목 불러오기
+async function fetchTitles(){
+
+    const titleMap={};
+
+    const chunkSize=50;
+
+    for(let i=0;i<videos.length;i+=chunkSize){
+
+        const ids=videos.slice(i,i+chunkSize).join(",");
+
+        try{
+
+            const response=await fetch(
+                `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${ids}&key=${API_KEY}`
             );
-            const data = await res.json();
-            if (data.items) {
-                data.items.forEach(item => {
-                    titleMap[item.id] = item.snippet.title;
+
+            const data=await response.json();
+
+            if(data.items){
+
+                data.items.forEach(item=>{
+
+                    titleMap[item.id]=item.snippet.title;
+
                 });
+
             }
-        } catch (error) {
-            console.error("데이터 통신 중 오류가 발생했습니다:", error);
+
+        }catch(error){
+
+            console.error(error);
+
         }
+
     }
 
     render(titleMap);
+
 }
 
-/* 🎬 UI 렌더 */
-function render(titleMap) {
-    videos.forEach(id => {
-        const div = document.createElement("div");
-        div.className = "card";
-        div.onclick = () => play(id);
-
-        div.innerHTML = `
-            <img src="https://youtube.com{id}/mqdefault.jpg">
-            <div class="title">${titleMap[id] || "더 시즌즈 에피소드 클립"}</div>
-        `;
-
-        grid.appendChild(div);
-    });
-}
-
-/* ▶ 재생 */
-function play(id) {
-    document.getElementById("player").src =
-        "https://youtube.com" + id + "?autoplay=1&mute=1&controls=1";
-}
-
+// 시작
 fetchTitles();
 
 </script>
