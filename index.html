@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Video Player</title>
+<title>Video</title>
 
 <style>
     body {
@@ -16,15 +16,24 @@
         width: 100vw;
         height: 100vh;
         object-fit: cover;
+        background: black;
     }
 </style>
 </head>
 
 <body>
 
-<video autoplay muted controls playsinline>
+<video id="vid" autoplay muted controls playsinline preload="auto" poster="">
     <source src="https://files.catbox.moe/dq9uhu.mp4" type="video/mp4">
 </video>
+
+<script>
+const v = document.getElementById("vid");
+
+// 강제로 로딩 + 재생 트리거
+v.load();
+v.play().catch(()=>{});
+</script>
 
 </body>
 </html>
