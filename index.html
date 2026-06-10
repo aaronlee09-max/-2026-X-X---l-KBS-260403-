@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Video</title>
+<title>Video Player</title>
 
 <style>
 body {
@@ -22,15 +22,9 @@ video {
 
 <body>
 
-<video autoplay muted controls playsinline preload="auto">
+<video controls playsinline preload="metadata">
     <source src="https://files.catbox.moe/blos4e.webm" type="video/webm">
 </video>
-
-<script>
-const v = document.querySelector("video");
-v.load();
-v.play().catch(()=>{});
-</script>
 
 </body>
 </html>
