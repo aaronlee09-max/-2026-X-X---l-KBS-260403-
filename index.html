@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Video Thumbnails Player</title>
+<title>YouTube Playlist App</title>
 
 <style>
 body {
@@ -13,26 +13,26 @@ body {
     font-family: Arial;
 }
 
-/* 상단 플레이어 */
+/* 플레이어 */
 #player {
     width: 100%;
     height: 60vh;
     border: none;
 }
 
-/* 썸네일 영역 */
+/* 썸네일 그리드 */
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 10px;
     padding: 10px;
 }
 
 .card {
-    cursor: pointer;
     background: #111;
     border-radius: 10px;
     overflow: hidden;
+    cursor: pointer;
     transition: 0.2s;
 }
 
@@ -42,13 +42,12 @@ body {
 
 .card img {
     width: 100%;
-    display: block;
 }
 
 .title {
     font-size: 12px;
-    padding: 6px;
-    text-align: center;
+    padding: 8px;
+    color: #ddd;
 }
 </style>
 </head>
@@ -57,15 +56,20 @@ body {
 
 <!-- 🎥 플레이어 -->
 <iframe id="player"
-    src="https://www.youtube.com/embed/lgaXjICBcsc?autoplay=1&mute=1&controls=1"
-    allow="autoplay; encrypted-media"
-    allowfullscreen>
+src="https://www.youtube.com/embed/lgaXjICBcsc?autoplay=1&mute=1&controls=1"
+allow="autoplay; encrypted-media"
+allowfullscreen>
 </iframe>
 
-<!-- 🎬 썸네일 리스트 -->
-<div class="grid">
+<!-- 🎬 썸네일 -->
+<div class="grid" id="grid"></div>
 
 <script>
+
+/* 🔑 API KEY */
+const API_KEY = "AIzaSyDlZ1MbNErffWAZFClz90ORgSoWtIBu5vs";
+
+/* 🎞 영상 목록 (31개) */
 const videos = [
 "lgaXjICBcsc","0AcuMH7KewM","003V9eO5knI","i2IK99Kli4E","h9vxTcUPz98",
 "MOtYJB8P0x0","moaAhsbh5Ds","ehrbOi8b4c4","iwFriq4fPQU","9PjnL0mRYm0",
@@ -76,22 +80,50 @@ const videos = [
 "8asxySoKbTk"
 ];
 
-for (let id of videos) {
-    document.write(`
-    <div class="card" onclick="play('${id}')">
-        <img src="https://img.youtube.com/vi/${id}/mqdefault.jpg">
-        <div class="title">${id}</div>
-    </div>
-    `);
+const grid = document.getElementById("grid");
+
+/* 🎯 YouTube API로 제목 가져오기 */
+async function fetchTitles() {
+    const res = await fetch(
+        `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videos.join(",")}&key=${API_KEY}`
+    );
+
+    const data = await res.json();
+
+    const titleMap = {};
+    data.items.forEach(item => {
+        titleMap[item.id] = item.snippet.title;
+    });
+
+    render(titleMap);
 }
 
+/* 🎬 화면 렌더 */
+function render(titleMap) {
+    videos.forEach(id => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.onclick = () => play(id);
+
+        div.innerHTML = `
+            <img src="https://img.youtube.com/vi/${id}/mqdefault.jpg">
+            <div class="title">${titleMap[id] || "제목 불러오기 실패"}</div>
+        `;
+
+        grid.appendChild(div);
+    });
+}
+
+/* ▶ 영상 재생 */
 function play(id) {
     document.getElementById("player").src =
         "https://www.youtube.com/embed/" + id + "?autoplay=1&mute=1&controls=1";
 }
-</script>
 
-</div>
+/* 🚀 시작 */
+fetchTitles();
+
+</script>
 
 </body>
 </html>
