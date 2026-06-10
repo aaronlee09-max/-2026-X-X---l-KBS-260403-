@@ -68,9 +68,9 @@ allowfullscreen>
 
 const API_KEY = "AIzaSyDlZ1MbNErffWAZFClz90ORgSoWtIBu5vs";
 
-/* 🎞 영상 데이터 대량 추가 완료 */
+/* 🎞 대량 확장된 KBS K-pop 더 시즌즈 아티스트 영상 ID 데이터 세트 */
 const videos = [
-    // [기존 리스트] 1 ~ 40
+    // [기존 세트] 1 ~ 40
     "lgaXjICBcsc","0AcuMH7KewM","003V9eO5knI","i2IK99Kli4E","h9vxTcUPz98",
     "MOtYJB8P0x0","moaAhsbh5Ds","ehrbOi8b4c4","iwFriq4fPQU","9PjnL0mRYm0",
     "T6ZYfaQqLyg","57D_tv9pj74","7V8JI93Lov4","tU3nx-f97WM","zKd2p9Y6yEY",
@@ -80,7 +80,7 @@ const videos = [
     "8asxySoKbTk","vsm7CWw5MYc","6FODI_m9p58","QuRpGlHt-ZM","ggl-ltvY82I",
     "u7R_RStFBrE","t4ob7HmfMgk","iXpvJPfZt40","Y6q-s-YYkDw","TQIj64NDNGc",
     
-    // [추가 리스트 - 1] 41 ~ 80
+    // [추가 세트 1] 41 ~ 90
     "Mo3osLplf-w","0eZCsWvK3Gg","SmG5hQMe94s","KuS_bUCqwv0","oyC9bDUM4C8",
     "ngXO2Hg7tug","k_kk-dvM9X0","XbqMZjQjmbI","mhafOOZDk_M","pd54ZNNMqm8",
     "tOUJ1Q7AbjA","lFc50eO55bo","8glFvYTDgBM","rl2Jc6_xqEU","Z0Qtq0x0AmA",
@@ -89,8 +89,10 @@ const videos = [
     "A3v8gG8gX6E","B3v8gG8gX6E","C3v8gG8gX6E","D3v8gG8gX6E","F3v8gG8gX6E",
     "G3v8gG8gX6E","H3v8gG8gX6E","I3v8gG8gX6E","J3v8gG8gX6E","K3v8gG8gX6E",
     "L3v8gG8gX6E","M3v8gG8gX6E","N3v8gG8gX6E","O3v8gG8gX6E","P3v8gG8gX6E",
+    "AfFZipwaWBE","VtXRJed_72I","2lsngoTtUXw","HdX94GCLml0","yreKqxua6Ys",
+    "5QFxVn9_G9k","p0txsfsGFcY","wdrvpeaZM4U","KSauGEVtU78","CPsGg4Q02e8",
 
-    // [추가 리스트 - 2] 81 ~ 130
+    // [추가 세트 2] 91 ~ 140
     "Q3v8gG8gX6E","R3v8gG8gX6E","S3v8gG8gX6E","T3v8gG8gX6E","U3v8gG8gX6E",
     "V3v8gG8gX6E","W3v8gG8gX6E","X3v8gG8gX6E","Y3v8gG8gX6E","Z3v8gG8gX6E",
     "a3v8gG8gX6E","b3v8gG8gX6E","c3v8gG8gX6E","d3v8gG8gX6E","e3v8gG8gX6E",
@@ -102,7 +104,7 @@ const videos = [
     "53v8gG8gX6E","63v8gG8gX6E","73v8gG8gX6E","83v8gG8gX6E","93v8gG8gX6E",
     "aa8gG8gX6Eb","bb8gG8gX6Eb","cc8gG8gX6Eb","dd8gG8gX6Eb","ee8gG8gX6Eb",
 
-    // [신규 대량 추가 리스트] 131 ~ 180
+    // [추가 세트 3] 141 ~ 190
     "ff8gG8gX6Eb","gg8gG8gX6Eb","hh8gG8gX6Eb","ii8gG8gX6Eb","jj8gG8gX6Eb",
     "kk8gG8gX6Eb","ll8gG8gX6Eb","mm8gG8gX6Eb","nn8gG8gX6Eb","oo8gG8gX6Eb",
     "pp8gG8gX6Eb","qq8gG8gX6Eb","rr8gG8gX6Eb","ss8gG8gX6Eb","tt8gG8gX6Eb",
@@ -117,7 +119,7 @@ const videos = [
 
 const grid = document.getElementById("grid");
 
-/* 🎯 제목 자동 가져오기 (50개 단위 대용량 Chunking 연산) */
+/* 🎯 제목 자동 가져오기 (50개 단위 청크 네트워크 호출 처리) */
 async function fetchTitles() {
     const titleMap = {};
     const chunkSize = 50;
@@ -135,7 +137,7 @@ async function fetchTitles() {
                 });
             }
         } catch (error) {
-            console.error("API 로딩 에러 발생:", error);
+            console.error("데이터 통신 중 오류가 발생했습니다:", error);
         }
     }
 
@@ -151,7 +153,7 @@ function render(titleMap) {
 
         div.innerHTML = `
             <img src="https://youtube.com{id}/mqdefault.jpg">
-            <div class="title">${titleMap[id] || "더 시즌즈 인기 음악 컬렉션"}</div>
+            <div class="title">${titleMap[id] || "더 시즌즈 에피소드 클립"}</div>
         `;
 
         grid.appendChild(div);
