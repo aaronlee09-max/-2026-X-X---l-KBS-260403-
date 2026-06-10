@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aaron's Channel</title>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; }
-        .video-background {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -100;
+        /* 화면 전체를 여백 없이 검은색 배경으로 고정 */
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; font-family: 'Arial', sans-serif; }
+        
+        .video-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none;
         }
-        /* 화면 비율에 상관없이 영상을 꽉 채우는 CSS */
+        
+        /* 16:9 비율 유지하며 대화면 가득 채우기 */
         iframe {
             position: absolute; top: 50%; left: 50%;
             width: 100vw; height: 56.25vw;
@@ -17,21 +20,58 @@
             transform: translate(-50%, -50%);
             border: none;
         }
-        .overlay {
-            position: absolute; top: 20px; left: 20px; color: white; z-index: 1;
-            font-family: 'Arial', sans-serif; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-            pointer-events: none;
+        
+        /* 텍스트 및 시작 안내 오버레이 레이어 */
+        .overlay-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 10; color: white; background: rgba(0,0,0,0.4);
+            cursor: pointer; transition: opacity 0.5s ease;
+        }
+        
+        .title {
+            position: absolute; top: 20px; left: 20px; margin: 0;
+            font-size: 2rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        
+        .start-btn {
+            padding: 15px 30px; font-size: 1.2rem; font-weight: bold; color: #fff;
+            background: #ff0000; border: none; border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(255,0,0,0.4); animate: pulse 2s infinite;
         }
     </style>
 </head>
 <body>
-    <div class="overlay">
-        <h1>AARON SH LEE</h1>
+
+    <!-- 화면 중앙을 클릭하면 검은 화면과 차단이 풀리는 트리거 레이어 -->
+    <div class="overlay-layer" id="overlay" onclick="startVideo()">
+        <h1 class="title">AARON SH LEE</h1>
+        <button class="start-btn">클릭하여 영상 재생 시작하기 🎬</button>
     </div>
-    <div class="video-background">
-        <!-- 보내주신 영상 ID(0AcuMH7KewM)가 자동으로 무한 반복되도록 세팅 완료했습니다 -->
-        <iframe src="https://youtube.com" 
-                allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+    <div class="video-container">
+        <!-- 보안 정책(origin) 우회 및 API 제어 매커니즘 적용 -->
+        <iframe id="player" 
+                src="https://youtube.com" 
+                allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen>
+        </iframe>
     </div>
+
+    <script>
+        // 최신 브라우저의 검은 화면(차단 이슈)을 강제로 해결하는 스크립트
+        function startVideo() {
+            var iframe = document.getElementById('player');
+            // 유튜브 내부 API 인터페이스에 재생 신호 강제 전송
+            iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+            iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
+            
+            // 클릭 유도 오버레이 투명하게 숨기기
+            var overlay = document.getElementById('overlay');
+            overlay.style.opacity = '0';
+            setTimeout(function() {
+                overlay.style.pointerEvents = 'none';
+            }, 500);
+        }
+    </script>
 </body>
 </html>
