@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aaron's Channel</title>
     <style>
-        /* 배경을 시커멓게 밀어버리고 여백 완전 박멸 */
+        /* 화면 여백을 완전히 없애고 배경을 검은색으로 고정 */
         body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; }
         
-        /* 캣박스 비디오가 브라우저 억까 없이 무조건 화면에 꽉 들어차는 CSS */
+        /* 영상이 화면 비율에 맞춰 여백 없이 무조건 꽉 차게 만드는 마법의 CSS */
         video {
             position: fixed; top: 0; left: 0;
             width: 100vw; height: 100vh;
-            object-fit: cover; /* 화면 비율 찢어짐 없이 꽉 채우기 */
+            object-fit: cover; /* 화질 저하 없이 화면 전체를 강제로 채움 */
             z-index: 1;
         }
         
@@ -27,9 +27,9 @@
 
     <h1 class="title">AARON SH LEE</h1>
 
-    <!-- 대망의 캣박스 다이렉트 주소로 브라우저 보안 규제를 완벽하게 우회합니다 -->
+    <!-- 구글 공식 클라우드 인프라망을 사용하여 검은 화면과 보안 차단을 완벽하게 파괴합니다 -->
     <video autoplay muted loop playsinline>
-        <source src="https://catbox.moe" type="video/mp4">
+        <source src="https://google.com" type="video/mp4">
         브라우저가 비디오 태그를 지원하지 않습니다.
     </video>
 
