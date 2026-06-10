@@ -3,39 +3,95 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Video Player</title>
+<title>Video Thumbnails Player</title>
 
 <style>
 body {
     margin: 0;
     background: black;
-    overflow: hidden;
+    color: white;
+    font-family: Arial;
 }
 
-iframe {
-    width: 100vw;
-    height: 100vh;
+/* 상단 플레이어 */
+#player {
+    width: 100%;
+    height: 60vh;
     border: none;
+}
+
+/* 썸네일 영역 */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    padding: 10px;
+}
+
+.card {
+    cursor: pointer;
+    background: #111;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card img {
+    width: 100%;
+    display: block;
+}
+
+.title {
+    font-size: 12px;
+    padding: 6px;
+    text-align: center;
 }
 </style>
 </head>
 
 <body>
 
-<iframe
-    id="yt"
-    src="https://www.youtube.com/embed/lgaXjICBcsc?autoplay=1&mute=1&playsinline=1&controls=1&rel=0"
+<!-- 🎥 플레이어 -->
+<iframe id="player"
+    src="https://www.youtube.com/embed/lgaXjICBcsc?autoplay=1&mute=1&controls=1"
     allow="autoplay; encrypted-media"
     allowfullscreen>
 </iframe>
 
+<!-- 🎬 썸네일 리스트 -->
+<div class="grid">
+
 <script>
-// 일부 브라우저 대응용 강제 재로드 트릭
-setTimeout(() => {
-    const iframe = document.getElementById("yt");
-    iframe.src = iframe.src;
-}, 800);
+const videos = [
+"lgaXjICBcsc","0AcuMH7KewM","003V9eO5knI","i2IK99Kli4E","h9vxTcUPz98",
+"MOtYJB8P0x0","moaAhsbh5Ds","ehrbOi8b4c4","iwFriq4fPQU","9PjnL0mRYm0",
+"T6ZYfaQqLyg","57D_tv9pj74","7V8JI93Lov4","tU3nx-f97WM","zKd2p9Y6yEY",
+"CCa4SuJCxA4","An0Tgf74XOY","qT8dDKNtPjo","V9HV8EoSyR4","nrn07ACbpkE",
+"So9BeU_Vy20","OLMK2AfMPjo","ZH-VB-jSVaU","6ef-aCP5zMY","YJJ_8w2zKbQ",
+"qtRCPzBpsA0","vbjLJnlB2kg","UbQFWXsoAM8","e6ngDwYb6Zo","gpDV5qUXNYc",
+"8asxySoKbTk"
+];
+
+for (let id of videos) {
+    document.write(`
+    <div class="card" onclick="play('${id}')">
+        <img src="https://img.youtube.com/vi/${id}/mqdefault.jpg">
+        <div class="title">${id}</div>
+    </div>
+    `);
+}
+
+function play(id) {
+    document.getElementById("player").src =
+        "https://www.youtube.com/embed/" + id + "?autoplay=1&mute=1&controls=1";
+}
 </script>
+
+</div>
 
 </body>
 </html>
