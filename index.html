@@ -3,28 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Video Player</title>
+<title>YouTube Player</title>
 
 <style>
 body {
     margin: 0;
     background: black;
+    overflow: hidden;
 }
 
-video {
+iframe {
     width: 100vw;
     height: 100vh;
-    object-fit: cover;
-    background: black;
+    border: none;
 }
 </style>
 </head>
 
 <body>
 
-<video controls playsinline preload="metadata">
-    <source src="https://files.catbox.moe/blos4e.webm" type="video/webm">
-</video>
+<iframe 
+    src="https://www.youtube.com/embed/lgaXjICBcsc?autoplay=1&mute=1&controls=1"
+    allow="autoplay; encrypted-media"
+    allowfullscreen>
+</iframe>
 
 </body>
 </html>
