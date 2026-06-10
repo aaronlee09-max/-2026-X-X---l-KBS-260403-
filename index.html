@@ -6,31 +6,28 @@
 <title>Video</title>
 
 <style>
-    body {
-        margin: 0;
-        background: black;
-        overflow: hidden;
-    }
+body {
+    margin: 0;
+    background: black;
+}
 
-    video {
-        width: 100vw;
-        height: 100vh;
-        object-fit: cover;
-        background: black;
-    }
+video {
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    background: black;
+}
 </style>
 </head>
 
 <body>
 
-<video id="vid" autoplay muted controls playsinline preload="auto" poster="">
-    <source src="https://files.catbox.moe/dq9uhu.mp4" type="video/mp4">
+<video autoplay muted controls playsinline preload="auto">
+    <source src="https://files.catbox.moe/blos4e.webm" type="video/webm">
 </video>
 
 <script>
-const v = document.getElementById("vid");
-
-// 강제로 로딩 + 재생 트리거
+const v = document.querySelector("video");
 v.load();
 v.play().catch(()=>{});
 </script>
