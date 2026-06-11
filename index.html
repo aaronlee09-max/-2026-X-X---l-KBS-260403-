@@ -68,6 +68,11 @@ allowfullscreen>
 <script>
 
 /* =========================
+   🔑 API KEY
+   ========================= */
+const API_KEY = "YOUR_API_KEY_HERE";
+
+/* =========================
    📌 56개 영상
    ========================= */
 const videos = [
@@ -129,7 +134,7 @@ const videos = [
 const grid = document.getElementById("grid");
 
 /* =========================
-   ▶ 재생 함수
+   ▶ 재생
    ========================= */
 function play(id){
     document.getElementById("player").src =
@@ -137,25 +142,38 @@ function play(id){
 }
 
 /* =========================
-   🔄 카드 생성
+   🔄 API 로드 + 제목 표시
    ========================= */
-function loadVideos(){
+async function loadVideos(){
 
-    for(let i = 0; i < videos.length; i++){
+    const url =
+    `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videos.join(",")}&key=${API_KEY}`;
 
-        const id = videos[i];
+    const res = await fetch(url);
+    const data = await res.json();
+
+    const titleMap = {};
+
+    (data.items || []).forEach(item=>{
+        titleMap[item.id] = item.snippet.title;
+    });
+
+    videos.forEach(id=>{
 
         const card = document.createElement("div");
         card.className = "card";
 
         card.innerHTML = `
             <img src="https://img.youtube.com/vi/${id}/mqdefault.jpg">
-            <div class="title">YouTube 영상</div>
+            <div class="title">
+                ${titleMap[id] || "제목 없음"}
+            </div>
         `;
 
         card.onclick = () => play(id);
         grid.appendChild(card);
-    }
+
+    });
 }
 
 /* =========================
