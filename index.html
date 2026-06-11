@@ -54,7 +54,6 @@ body{
 
 <body>
 
-<!-- 🎬 플레이어 -->
 <iframe
 id="player"
 src="https://www.youtube.com/embed/lgaXjICBcsc?autoplay=1&mute=1&controls=1"
@@ -62,7 +61,6 @@ allow="autoplay; encrypted-media"
 allowfullscreen>
 </iframe>
 
-<!-- 📦 리스트 -->
 <div id="grid" class="grid"></div>
 
 <script>
@@ -134,37 +132,44 @@ const videos = [
 const grid = document.getElementById("grid");
 
 /* =========================
-   ▶ 재생
+   ▶ 재생 (클릭 시에는 소리가 나오도록 mute=1 제거)
    ========================= */
 function play(id){
     document.getElementById("player").src =
-        "https://www.youtube.com/embed/" + id + "?autoplay=1&mute=1&controls=1";
+        "https://www.youtube.com/embed/" + id + "?autoplay=1&controls=1";
 }
 
 /* =========================
-   🔄 API 로드 + 제목 표시
+   🔄 API 로드 + 제목 표시 (50개씩 쪼개서 요청)
    ========================= */
 async function loadVideos(){
-
-    const url =
-    `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videos.join(",")}&key=${API_KEY}`;
-
-    const res = await fetch(url);
-    const data = await res.json();
-
     const titleMap = {};
+    const chunkSize = 50;
 
-    (data.items || []).forEach(item=>{
-        titleMap[item.id] = item.snippet.title;
-    });
+    // 영상을 50개 단위로 나누어 API 요청 진행
+    for (let i = 0; i < videos.length; i += chunkSize) {
+        const chunk = videos.slice(i, i + chunkSize);
+        const url = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${chunk.join(",")}&key=${API_KEY}`;
+        
+        try {
+            const res = await fetch(url);
+            const data = await res.json();
+            
+            (data.items || []).forEach(item => {
+                titleMap[item.id] = item.snippet.title;
+            });
+        } catch (error) {
+            console.error("유튜브 API 로드 중 오류 발생:", error);
+        }
+    }
 
-    videos.forEach(id=>{
-
+    // 화면에 리스트 그리기
+    videos.forEach(id => {
         const card = document.createElement("div");
         card.className = "card";
 
         card.innerHTML = `
-            <img src="https://img.youtube.com/vi/${id}/mqdefault.jpg">
+            <img src="https://img.youtube.com/vi/${id}/mqdefault.jpg" alt="thumbnail">
             <div class="title">
                 ${titleMap[id] || "제목 없음"}
             </div>
@@ -172,7 +177,6 @@ async function loadVideos(){
 
         card.onclick = () => play(id);
         grid.appendChild(card);
-
     });
 }
 
