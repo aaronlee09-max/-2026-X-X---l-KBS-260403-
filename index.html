@@ -66,71 +66,32 @@ allowfullscreen>
 
 <script>
 
+/* =========================
+   🔑 API KEY (본인 키로 교체)
+   ========================= */
 const API_KEY = "AIzaSyDlZ1MbNErffWAZFClz90ORgSoWtIBu5vs";
 
 /* =========================
-   📌 영상 리스트
+   📌 영상 56개
    ========================= */
 const videos = [
-"lgaXjICBcsc",
-"003V9eO5knI",
-"i2IK99Kli4E",
-"h9vxTcUPz98",
-"MOtYJB8P0x0",
-"moaAhsbh5Ds",
-"ehrbOi8b4c4",
-"iwFriq4fPQU",
-"9PjnL0mRYm0",
-"T6ZYfaQqLyg",
-"57D_tv9pj74",
-"7V8JI93Lov4",
-"tU3nx-f97WM",
-"zKd2p9Y6yEY",
-"CCa4SuJCxA4",
-"An0Tgf74XOY",
-"qT8dDKNtPjo",
-"V9HV8EoSyR4",
-"So9BeU_Vy20",
-"OLMK2AfMPjo",
-"ZH-VB-jSVaU",
-"6ef-aCP5zMY",
-"qtRCPzBpsA0",
-"vbjLJnlB2kg",
-"UbQFWXsoAM8",
-"e6ngDwYb6Zo",
-"gpDV5qUXNYc",
-"8asxySoKbTk",
-"vsm7CWw5MYc",
-"8qoFBIkTAHk",
-"-jCweiey59w",
-"BJRlZ0R4nuE",
-"nV9TUVZHAOg",
-"KqSLDtq3PEM",
-"XEIb3JcUugc",
-"Pj4ktP1rFVI",
-"GwA-xw_HqyI",
-"JzD9Yt4oaeA",
-"NzvOfO2m_wY",
-"OfLnC5zrExg",
-"8t2BNHNv95s",
-"GK5tm8Atfi0",
-"EOHEfNk8hMc",
-"GTFVNJQ4R5M",
-"eiGZqx9e-Ms",
-"jOQDCgBW6a0",
-"bxrGfZCPDhQ",
-"DY-C-yNVj9M",
-"dnoKwmHc6Pg",
-"cpZAJoDh0Yo",
-"Op4Y9M0d4bw",
-"fvIK6jM4118",
-"LxnMunnTJ1c"
+"lgaXjICBcsc","003V9eO5knI","i2IK99Kli4E","h9vxTcUPz98","MOtYJB8P0x0",
+"moaAhsbh5Ds","ehrbOi8b4c4","iwFriq4fPQU","9PjnL0mRYm0","T6ZYfaQqLyg",
+"57D_tv9pj74","7V8JI93Lov4","tU3nx-f97WM","zKd2p9Y6yEY","CCa4SuJCxA4",
+"An0Tgf74XOY","qT8dDKNtPjo","V9HV8EoSyR4","So9BeU_Vy20","OLMK2AfMPjo",
+"ZH-VB-jSVaU","6ef-aCP5zMY","qtRCPzBpsA0","vbjLJnlB2kg","UbQFWXsoAM8",
+"e6ngDwYb6Zo","gpDV5qUXNYc","8asxySoKbTk","vsm7CWw5MYc","8qoFBIkTAHk",
+"-jCweiey59w","BJRlZ0R4nuE","nV9TUVZHAOg","KqSLDtq3PEM","XEIb3JcUugc",
+"Pj4ktP1rFVI","GwA-xw_HqyI","JzD9Yt4oaeA","NzvOfO2m_wY","OfLnC5zrExg",
+"8t2BNHNv95s","GK5tm8Atfi0","EOHEfNk8hMc","GTFVNJQ4R5M","eiGZqx9e-Ms",
+"jOQDCgBW6a0","bxrGfZCPDhQ","DY-C-yNVj9M","dnoKwmHc6Pg","cpZAJoDh0Yo",
+"Op4Y9M0d4bw","fvIK6jM4118","LxnMunnTJ1c"
 ];
 
 const grid = document.getElementById("grid");
 
 /* =========================
-   ▶ 재생
+   ▶ 영상 재생
    ========================= */
 function play(id){
     document.getElementById("player").src =
@@ -138,7 +99,7 @@ function play(id){
 }
 
 /* =========================
-   🔄 로드 (오류 처리 없음)
+   🔄 로드
    ========================= */
 async function loadVideos(){
 
@@ -150,7 +111,7 @@ async function loadVideos(){
 
     const titleMap = {};
 
-    data.items.forEach(item=>{
+    (data.items || []).forEach(item=>{
         titleMap[item.id] = item.snippet.title;
     });
 
@@ -161,7 +122,9 @@ async function loadVideos(){
 
         card.innerHTML=`
             <img src="https://img.youtube.com/vi/${id}/mqdefault.jpg">
-            <div class="title">${titleMap[id] || ""}</div>
+            <div class="title">
+                ${titleMap[id] || "YouTube 영상"}
+            </div>
         `;
 
         card.onclick=()=>play(id);
