@@ -5,16 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aaron's Music</title>
 <style>
-/* 폰트 경로 및 설정 보완 */
+/* 아이패드 및 웹 서버 환경 최적화 폰트 설정 */
 @font-face {
   font-family: "Handwritten";
-  src: local("Handwritten"), 
-       url("./handwritten.ttf") format("truetype");
-  font-display: swap; /* 폰트 로딩 중에도 텍스트가 깨지지 않게 보임 */
+  /* 상대 경로를 명확히 하고, 로딩 지연 시 기본 폰트 먼저 보이게 설정 */
+  src: url("./handwritten.ttf") format("truetype");
+  font-display: swap; 
 }
 
 * {
   box-sizing: border-box;
+  /* 기본 sans-serif를 백업으로 두어 폰트가 로드되는 동안 글자가 안 보이는 현상 방지 */
   font-family: "Handwritten", sans-serif;
 }
 
@@ -43,7 +44,7 @@ body {
   border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.2s ease; /* 부드러운 애니메이션 효과 추가 */
+  transition: transform 0.2s ease;
 }
 
 .card:hover {
@@ -71,7 +72,7 @@ body {
 <div id="grid" class="grid"></div>
 
 <script>
-// 주의: 배포 시에는 구글 클라우드 콘솔에서 API 키의 HTTP 리퍼러 제한을 설정하세요.
+// 주의: 배포된 웹사이트 주소가 확정되면 구글 클라우드 콘솔에서 API 키 사용 제한(HTTP 리퍼러)을 꼭 설정하세요.
 const API_KEY = "AIzaSyDlZ1MbNErffWAZFClz90ORgSoWtIBu5vs";
 
 const videos = [
@@ -112,11 +113,10 @@ async function loadVideos() {
       grid.appendChild(c);
     });
   } catch (e) {
-    console.error("비디오를 불러오는 중 오류 발생:", e);
+    console.error("비디오 로드 오류:", e);
   }
 }
 
-// 페이지 로드 시 실행
 loadVideos();
 </script>
 </body>
