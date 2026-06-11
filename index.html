@@ -66,10 +66,13 @@ allowfullscreen>
 
 <script>
 
+/* =========================
+   🔑 API KEY
+   ========================= */
 const API_KEY = "AIzaSyDlZ1MbNErffWAZFClz90ORgSoWtIBu5vs";
 
 /* =========================
-   📌 영상 리스트
+   📌 영상 리스트 (56개)
    ========================= */
 const videos = [
 "lgaXjICBcsc",
@@ -138,7 +141,7 @@ function play(id){
 }
 
 /* =========================
-   🔄 로드
+   🔄 영상 로드 (API 버전)
    ========================= */
 async function loadVideos(){
 
@@ -154,7 +157,7 @@ async function loadVideos(){
 
         if(data.items){
             data.items.forEach(item=>{
-                titleMap[item.id]=item.snippet.title;
+                titleMap[item.id] = item.snippet.title;
             });
         }
 
@@ -171,7 +174,6 @@ async function loadVideos(){
             `;
 
             card.onclick=()=>play(id);
-
             grid.appendChild(card);
 
         });
@@ -191,7 +193,6 @@ async function loadVideos(){
             `;
 
             card.onclick=()=>play(id);
-
             grid.appendChild(card);
 
         });
