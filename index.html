@@ -5,54 +5,118 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aaron's Music</title>
 <style>
-@font-face{
-  font-family:"Handwritten";
-  src:url("handwritten.ttf") format("truetype");
+/* 폰트 경로 및 설정 보완 */
+@font-face {
+  font-family: "Handwritten";
+  src: local("Handwritten"), 
+       url("./handwritten.ttf") format("truetype");
+  font-display: swap; /* 폰트 로딩 중에도 텍스트가 깨지지 않게 보임 */
 }
-*{box-sizing:border-box;font-family:"Handwritten",sans-serif}
-body{margin:0;background:#000;color:#fff}
-#player{width:100%;height:60vh;border:none;display:block}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;padding:12px}
-.card{background:#111;border-radius:12px;overflow:hidden;cursor:pointer}
-.card:hover{transform:scale(1.03)}
-.card img{width:100%;display:block}
-.title{padding:10px;font-size:14px}
+
+* {
+  box-sizing: border-box;
+  font-family: "Handwritten", sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+}
+
+#player {
+  width: 100%;
+  height: 60vh;
+  border: none;
+  display: block;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  padding: 12px;
+}
+
+.card {
+  background: #111;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease; /* 부드러운 애니메이션 효과 추가 */
+}
+
+.card:hover {
+  transform: scale(1.03);
+}
+
+.card img {
+  width: 100%;
+  display: block;
+}
+
+.title {
+  padding: 10px;
+  font-size: 14px;
+}
 </style>
 </head>
 <body>
+
 <iframe id="player"
-src="https://www.youtube.com/embed/lgaXjICBcsc?autoplay=1&mute=1&controls=1"
-allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  src="https://www.youtube.com/embed/lgaXjICBcsc?autoplay=1&mute=1&controls=1"
+  allow="autoplay; encrypted-media" allowfullscreen>
+</iframe>
+
 <div id="grid" class="grid"></div>
+
 <script>
+// 주의: 배포 시에는 구글 클라우드 콘솔에서 API 키의 HTTP 리퍼러 제한을 설정하세요.
 const API_KEY = "AIzaSyDlZ1MbNErffWAZFClz90ORgSoWtIBu5vs";
-const videos=[
-"lgaXjICBcsc","0AcuMH7KewM","003V9eO5knI","i2IK99Kli4E","h9vxTcUPz98",
-"MOtYJB8P0x0","moaAhsbh5Ds","ehrbOi8b4c4","iwFriq4fPQU","9PjnL0mRYm0",
-"T6ZYfaQqLyg","57D_tv9pj74","7V8JI93Lov4","tU3nx-f97WM","zKd2p9Y6yEY",
-"CCa4SuJCxA4","An0Tgf74XOY","qT8dDKNtPjo","V9HV8EoSyR4","nrn07ACbpkE",
-"So9BeU_Vy20","OLMK2AfMPjo","ZH-VB-jSVaU","6ef-aCP5zMY","YJJ_8w2zKbQ",
-"qtRCPzBpsA0","vbjLJnlB2kg","UbQFWXsoAM8","e6ngDwYb6Zo","gpDV5qUXNYc",
-"8asxySoKbTk","vsm7CWw5MYc","6FODI_m9p58","vmd00AxPpxo","8qoFBIkTAHk"];
-function play(id){
- document.getElementById('player').src=`https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=1`;
+
+const videos = [
+  "lgaXjICBcsc","0AcuMH7KewM","003V9eO5knI","i2IK99Kli4E","h9vxTcUPz98",
+  "MOtYJB8P0x0","moaAhsbh5Ds","ehrbOi8b4c4","iwFriq4fPQU","9PjnL0mRYm0",
+  "T6ZYfaQqLyg","57D_tv9pj74","7V8JI93Lov4","tU3nx-f97WM","zKd2p9Y6yEY",
+  "CCa4SuJCxA4","An0Tgf74XOY","qT8dDKNtPjo","V9HV8EoSyR4","nrn07ACbpkE",
+  "So9BeU_Vy20","OLMK2AfMPjo","ZH-VB-jSVaU","6ef-aCP5zMY","YJJ_8w2zKbQ",
+  "qtRCPzBpsA0","vbjLJnlB2kg","UbQFWXsoAM8","e6ngDwYb6Zo","gpDV5qUXNYc",
+  "8asxySoKbTk","vsm7CWw5MYc","6FODI_m9p58","vmd00AxPpxo","8qoFBIkTAHk"
+];
+
+function play(id) {
+  document.getElementById('player').src = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=1`;
 }
-async function loadVideos(){
- const grid=document.getElementById('grid');
- try{
-  const res=await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videos.join(",")}&key=${API_KEY}`);
-  const data=await res.json();
-  const titleMap={};
-  (data.items||[]).forEach(it=>titleMap[it.id]=it.snippet.title);
-  videos.forEach(id=>{
-    const c=document.createElement('div');
-    c.className='card';
-    c.innerHTML=`<img src="https://img.youtube.com/vi/${id}/mqdefault.jpg"><div class="title">${titleMap[id]||"제목 불러오기 실패"}</div>`;
-    c.onclick=()=>play(id);
-    grid.appendChild(c);
-  });
- }catch(e){console.error(e);}
+
+async function loadVideos() {
+  const grid = document.getElementById('grid');
+  try {
+    const res = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videos.join(",")}&key=${API_KEY}`);
+    const data = await res.json();
+    
+    const titleMap = {};
+    if (data.items) {
+      data.items.forEach(it => {
+        titleMap[it.id] = it.snippet.title;
+      });
+    }
+    
+    videos.forEach(id => {
+      const c = document.createElement('div');
+      c.className = 'card';
+      c.innerHTML = `
+        <img src="https://img.youtube.com/vi/${id}/mqdefault.jpg" alt="thumbnail">
+        <div class="title">${titleMap[id] || "제목 불러오기 실패"}</div>
+      `;
+      c.onclick = () => play(id);
+      grid.appendChild(c);
+    });
+  } catch (e) {
+    console.error("비디오를 불러오는 중 오류 발생:", e);
+  }
 }
+
+// 페이지 로드 시 실행
 loadVideos();
 </script>
 </body>
