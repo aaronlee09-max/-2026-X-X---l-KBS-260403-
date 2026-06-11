@@ -3,14 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>YouTube Playlist</title>
+<title>Aaron's Music</title>
 
 <style>
+@font-face {
+    font-family: "ParkFont";
+    src: url("./[폰트] 박광일체 다운로드.ttf") format("truetype");
+}
+
+*{
+    box-sizing:border-box;
+    font-family:"ParkFont",sans-serif;
+}
+
 body{
     margin:0;
     background:#000;
-    color:#fff;
-    font-family:Arial,sans-serif;
+    color:white;
 }
 
 #player{
@@ -21,14 +30,14 @@ body{
 
 .grid{
     display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-    gap:12px;
-    padding:12px;
+    grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+    gap:15px;
+    padding:15px;
 }
 
 .card{
     background:#111;
-    border-radius:10px;
+    border-radius:12px;
     overflow:hidden;
     cursor:pointer;
     transition:.2s;
@@ -44,28 +53,28 @@ body{
 }
 
 .title{
-    padding:8px;
-    font-size:13px;
-    color:#ddd;
+    padding:10px;
+    font-size:14px;
+    color:#fff;
 }
 </style>
-</head>
 
+</head>
 <body>
 
 <iframe
-    id="player"
-    src="https://www.youtube.com/embed/lgaXjICBcsc?autoplay=1&mute=1&controls=1"
-    allow="autoplay; encrypted-media"
-    allowfullscreen>
+id="player"
+src="https://www.youtube.com/embed/lgaXjICBcsc?autoplay=1&mute=1&controls=1"
+allow="autoplay; encrypted-media"
+allowfullscreen>
 </iframe>
 
-<div id="grid" class="grid"></div>
+<div class="grid" id="grid"></div>
 
 <script>
 
-// ▼▼▼ 자신의 YouTube Data API 키 입력 ▼▼▼
-const API_KEY = "AIzaSyDlZ1MbNErffWAZFClz90ORgSoWtIBu5vs";
+// 자신의 YouTube Data API Key 입력
+const API_KEY = "YOUR_YOUTUBE_API_KEY";
 
 const videos = [
 "lgaXjICBcsc",
@@ -105,19 +114,17 @@ const videos = [
 "8qoFBIkTAHk"
 ];
 
-const grid = document.getElementById("grid");
-
 function play(id){
     document.getElementById("player").src =
-        `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=1`;
+    `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=1`;
 }
 
 async function loadVideos(){
 
-    const url =
-`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videos.join(",")}&key=${API_KEY}`;
+    const res = await fetch(
+        `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videos.join(",")}&key=${API_KEY}`
+    );
 
-    const res = await fetch(url);
     const data = await res.json();
 
     const titleMap = {};
@@ -128,6 +135,8 @@ async function loadVideos(){
         });
     }
 
+    const grid=document.getElementById("grid");
+
     videos.forEach(id=>{
 
         const card=document.createElement("div");
@@ -136,7 +145,7 @@ async function loadVideos(){
         card.innerHTML=`
             <img src="https://img.youtube.com/vi/${id}/mqdefault.jpg">
             <div class="title">
-                ${titleMap[id] || "제목 불러오는 중..."}
+                ${titleMap[id] || "제목"}
             </div>
         `;
 
